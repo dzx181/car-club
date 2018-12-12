@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxq.dao.ConsumeDao">
+    <insert id="insertConsume" parameterType="com.zxq.entity.Consume">
+        INSERT INTO car_consume(consume_analyes, consume_day, consume_month, member_id, create_date)
+        VALUES (#{consumeAnalyes}, #{consumeDay}, #{consumeMonth}, #{memberId}, now());
+    </insert>
+    <delete id="deleteConsume" parameterType="java.util.List">
+        DELETE FROM car_consume WHERE id IN
+        <foreach collection="list" separator="," close=")" open="(" item="id">
+            #{id}
+        </foreach>
+
+    </delete>
+    <update id="updateConsume" parameterType="com.zxq.entity.Consume">
+        UPDATE car_consume
+        SET consume_analyes = #{consumeAnalyes},
+            consume_day     = #{consumeDay},
+            consume_month   = #{consumeMonth},
+            member_id       = #{memberId}
+        WHERE id = #{id};
+    </update>
+    <select id="selectConsumeByID" parameterType="java.lang.Integer" resultType="com.zxq.entity.vo.ConsumeVO" resultMap="select_consumeMap">
+        SELECT id,
+               consume_analyes,
+               consume_day,
+               consume_month,
+               member_id,
+               create_date
+        FROM car_consume
+        WHERE id = #{id};
+    </select>
+    <select id="selectConsume"
+            resultType="com.zxq.entity.vo.ConsumeVO" resultMap="select_consumeMap">
+
+        SELECT
+        id,
+        consume_analyes,
+        consume_day,
+        consume_month,
+        member_id,
+        create_date
+
+        FROM
+        car_consume
+
+        <where>
+            <if test="memberId!=null and memberId!=''">
+                and member_id = #{memberId}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="select_consumeMap" type="com.zxq.entity.vo.ConsumeVO">
+        <id column="id" property="id"></id>
+        <result column="consume_analyes" property="consumeAnalyes"></result>
+        <result column="consume_day" property="consumeDay"></result>
+        <result column="consume_month" property="consumeMonth"></result>
+        <result column="create_date" property="createDate"></result>
+        <association property="member" column="member_id" select="com.zxq.dao.MemberDao.selectMemberByID"
+                     javaType="com.zxq.entity.Member"></association>
+    </resultMap>
+</mapper>

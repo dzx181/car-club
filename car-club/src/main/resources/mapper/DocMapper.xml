@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxq.dao.DocDao">
+
+    <!--文件上传 -->
+    <insert id="fileUpload" parameterType="com.zxq.entity.vo.DocVO">
+        insert into
+            car_doc(title,filename,remark,create_date,user_id)
+        values(#{title},#{filename},#{remark},now(),#{user.id});
+    </insert>
+    <!-- 查找文件 -->
+    <select id="selectFile" parameterType="com.zxq.entity.Doc" resultMap="selectFile_map"
+            resultType="com.zxq.entity.vo.DocVO">
+        SELECT
+        car_doc.id,
+        car_doc.title,
+        car_doc.filename,
+        car_doc.remark,
+        car_doc.create_date,
+        car_doc.user_id
+        FROM
+        car_doc
+        <where>
+            <if test="title!=null and title!=''">
+                and title like '%${title}%'
+            </if>
+        </where>
+
+
+    </select>
+    <resultMap type="com.zxq.entity.vo.DocVO" id="selectFile_map">
+        <id property="id" column="id" />
+        <result property="filename" column="filename" />
+        <result property="title" column="title" />
+        <result property="remark" column="remark" />
+        <result property="createDate" column="create_date" />
+        <!-- 属性user 1 对1 association：实现1对1的关联对象映射 property：pojo的属性名 column：对应的字段名
+            javaType：pojo属性数据类型 select:传入根据外键ID执行查询sql -->
+        <association property="user" javaType="com.zxq.entity.User" select="com.zxq.dao.UserDao.selectUserByID" column="user_id">
+        </association>
+    </resultMap>
+    <delete id="deleteFile" parameterType="java.util.List">
+        delete from car_doc where id in
+        <foreach collection="list" separator="," close=")" open="(" item="id">
+            #{id}
+        </foreach>
+
+    </delete>
+</mapper>

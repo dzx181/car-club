@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>memberEdit</title>
+    <link href="css/bootstrap.css" type="text/css" rel="stylesheet"/>
+    <link href="css/main.css" type="text/css" charset="UTF-8" rel="stylesheet"/>
+
+
+</head>
+<body>
+
+<div style="border:#DDDDDD solid 1px;height: 600px;margin-top: 10px;padding: 10px;margin-left:  250px;"
+     id="content_box">
+    <div id="schedule-box" class="boxshaw hidden "></div>
+    <span class="glyphicon glyphicon-circle-arrow-right"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;
+    当前位置：会员管理&nbsp;&gt;&nbsp;修改会员
+    <hr/>
+    <!--添加成功字样-->
+    <div id="addInfo"></div>
+    <div id="error" style="color:#FF0000;font-size:14px ;height: 20px;"></div>
+    <form id="memberform">
+        <table id="member_tab" style="width: 100%">
+            <tr>
+                <td>重要程度：</td>
+                <td>
+                    <select name="importanceGrade" id="importanceGrade" style="height: 35px;" class="inputCss">
+                        <option value="">----全部----</option>
+                        <option value="1" th:selected="${memberEdit.importanceGrade}=='1'?true:false">重点</option>
+                        <option value="2" th:selected="${memberEdit.importanceGrade}=='2'?true:false">优质</option>
+                        <option value="3" th:selected="${memberEdit.importanceGrade}=='3'?true:false">会员</option>
+                        <option value="4" th:selected="${memberEdit.importanceGrade}=='4'?true:false">一般</option>
+                        <option value="5" th:selected="${memberEdit.importanceGrade}=='5'?true:false">放弃</option>
+                        <option value="6" th:selected="${memberEdit.importanceGrade}=='6'?true:false">未知</option>
+                    </select>
+                </td>
+                <td>性&nbsp;别：</td>
+                <td>
+                    <select class="inputCss" id="sex" name="sex">
+                        <option value="">--请选择性别--</option>
+                        <option value="男" th:selected="${memberEdit.sex}=='男'?true:false">男</option>
+                        <option value="女" th:selected="${memberEdit.sex}=='女'?true:false">女</option>
+                    </select>
+
+                </td>
+                <td>是否续费：</td>
+                <td>
+                    <select class="inputCss" name="ifContinu" id="member_ifContinu">
+                        <option value="">--请输入会员是否续费--</option>
+                        <option value="是" th:selected="${memberEdit.ifContinu}=='是'?true:false">是</option>
+                        <option value="否" th:selected="${memberEdit.ifContinu}=='否'?true:false">否</option>
+                    </select>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr style="height: 10px;">
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>姓&nbsp;名：</td>
+                <td><input type="text" name="name" class="inputCss" style="width:205px;" placeholder="请输入会员姓名"
+                           maxlength="20" id="member_name" th:value="${memberEdit.name}" /></td>
+                <td>手&nbsp;机：</td>
+                <td><input th:value="${memberEdit.telphone}" type="text" name="telphone" class="inputCss"
+                           style="width:205px;" placeholder="请输入学员联系手机号码" id="member_phone"/></td>
+
+                <td>出生日期：</td>
+                <td><input th:value="${#dates.format(memberEdit.birthday,'yyyy-MM-dd')}" type="text" name="birthday"
+                           class="inputCss" style="width:205px;" placeholder="请输入学员出生日期" id="member_birthday"/></td>
+
+            </tr>
+            <tr style="height: 10px;">
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>微信账号：</td>
+                <td><input th:value="${memberEdit.weChatID}" type="text" name="weChatID" class="inputCss"
+                           style="width:205px;" placeholder="请输入学员联系微信账号"  id="member_weChatID"/>&nbsp;
+                </td>
+                <td>会费：</td>
+                <td><input type="text" name="pay" class="inputCss" style="width:205px;" placeholder="请输入会员所交会费"
+                           id="member_pay" th:value="${memberEdit.pay}" /></td>
+            </tr>
+            <tr style="height: 10px;">
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr style="height: 10px;">
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="5" align="center"><input type="button" value="保存" class="btn btn-success" id="addbtn"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="reset" name="cancel" class="btn btn-danger" value="取消"/></td>
+            </tr>
+
+        </table>
+
+    </form>
+
+</div>
+
+<script src="js/jquery-1.12.4.js" type="application/javascript" charset="UTF-8"></script>
+<script src="js/bootstrap.js" type="application/javascript" charset="UTF-8"></script>
+<script src="laydate/laydate.js" type="text/javascript"></script>
+<script src="js/common.js" type="application/javascript" charset="UTF-8"></script>
+<script type="text/javascript">
+    /* type */
+    $(function () {
+
+        var window_width = $(window).width();
+        var window_height = $(window).height();
+        $("#content_box").attr("width", window_width - 250 - 250);
+        //日期插件
+        laydate.render({
+            elem: '#member_birthday',
+            theme: '#13B3FD'//指定元素
+            , trigger: 'click'
+        });
+    });
+
+    $("#addbtn").click(function () {
+        //获取表单值
+        var sex = $("#sex").val();
+        var name = $("#member_name").val();
+        var telphone = $("#member_phone").val();
+        var birthday = $("#member_birthday").val();
+        var weChatID = $("#member_weChatID").val();
+        var pay = $("#member_pay").val();
+        var ifContinu = $("#member_ifContinu").val();
+        var importanceGrade = $("#importanceGrade").val();
+        //创建正则模板
+        var re = /[`~!@#$%^&*_+<>{}\\/'[\]]/im;
+        var phone_regx = /^1(3|4|5|7|8)\d{9}$/;
+        if (importanceGrade.trim() == "") {
+            $("#error").text("*请选择会员的重要程度");
+        }else if (sex.trim() == "") {
+            $("#error").text("*请选择会员的性别");
+        } else if (ifContinu.trim() == "") {
+            $("#error").text("*会员是否续费，请补充完整");
+        }else if (name.trim() == "") {
+            $("#error").text("*会员姓名不能为空，请补充完整");
+        } else if (re.test(name.trim())) {
+            $("#error").text("*会员姓名存在`~!@#$%^&*_+<>{}\'[]/等的非法字符");
+        } else if (telphone.trim() == "") {
+            $("#error").text("*手机不能为空，请补充完整");
+        } else if (re.test(telphone.trim())) {
+            $("#error").text("*手机存在`~!@#$%^&*_+<>{}\'[]/等的非法字符");
+        } else if (!phone_regx.test(telphone.trim())) {
+            $("#error").text("*输入的手机格式不对，请正确输入手机格式");
+        } else if (birthday.trim() == "") {
+            $("#error").text("*请选择会员的生日");
+        } else if (weChatID.trim() == "") {
+            $("#error").text("*会员的微信不能为空，请补充完整");
+        } else if (pay.trim() == "") {
+            $("#error").text("*会员的基本工资，请补充完整");
+        }  else {
+
+            $("#memberform").attr("action", "saveMember");
+            $("#memberform").submit();
+        }
+
+
+    });
+</script>
+
+</body>
+</html>

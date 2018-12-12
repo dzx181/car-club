@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>professList</title>
+    <link href="css/bootstrap.css" type="text/css" rel="stylesheet"/>
+    <link href="css/main.css" type="text/css" rel="stylesheet"/>
+    <link href="css/paging.css" type="text/css" rel="stylesheet"/>
+    <style>
+
+
+    </style>
+</head>
+<body>
+<div style="border:#DDDDDD solid 1px;margin-top: 10px;padding: 10px;margin-left: 250px;height:700px;" id="content_box">
+    <span class="glyphicon glyphicon-circle-arrow-right"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;
+    当前位置：业务管理&nbsp;&gt;&nbsp;业务查询
+
+
+    <hr/>
+    <form action="" id="professform">
+
+        业务名称：
+        <input name="serviceName" id="serviceName" style="height: 35px;" class="inputCss"
+               th:value="${blurProfess}==null? '':${blurProfess.serviceName}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       投保类型:
+        <input name="insuranceType" id="insuranceType" style="height: 35px;" class="inputCss"
+               th:value="${blurProfess}==null? '':${blurProfess.insuranceType}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="button" value="搜索" class="btn btn-success" id="selectProfess"/>&nbsp;
+        <input type="button" class="btn btn-danger" value="删除" id="dropProfess" th:if="${session.user.status==1}"/>
+
+        <br/><br/>
+        <table cellspacing="0" cellpadding="" class="table table-hover table-striped" style="text-align: center;"
+               id="profess_tab">
+            <tr id="tr_th">
+                <th><input type="checkbox" name="caption" value="0" id="checkAll"/></th>
+                <th>业务名称</th>
+                <th>车牌型号</th>
+                <th>会员</th>
+                <th>投保类型</th>
+                <th>业务日期</th>
+                <th>操作</th>
+            </tr>
+            <tr th:each="profess:${professVOList}">
+                <td><input type="checkbox" name="caption"
+                           th:id="'box_'+${profess.id}" th:value="${profess.id}"/></td>
+                <td>[[${profess.serviceName}]]</td>
+                <td>[[${profess.vehicle}]]</td>
+                <td>[[${profess.member.name}]]</td>
+                <td>[[${profess.insuranceType}]]</td>
+                <td>
+                    <div th:text="${#dates.format(profess.createDate,'yyyy年MM月dd日')}"></div>
+                </td>
+                <td><a th:href="'editProfess?professId='+${profess.id}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+            </tr>
+        </table>
+    </form>
+    <!--分页元素-->
+    <div class="box" id="box"></div>
+    <!--添加表单提交标志-->
+    <form id="pageForm" style="display: none">
+        <input name="serviceName" th:value="${blurProfess}==null? '':${blurProfess.serviceName} "/>
+        <input name="insuranceType" th:value="${blurProfess}==null? '':${blurProfess.insuranceType} "/>
+        <input type="text" id="pages" name="page"/>
+
+        <input type="button" id="btn" value="tijiao"/>
+        <!--传入分页的参数-->
+        <input type="text" id="actionName" value="selectProfess"/>
+    </form>
+
+    <script src="js/jquery-1.12.4.js" type="application/javascript" charset="UTF-8"></script>
+    <script src="js/bootstrap.js" type="application/javascript" charset="UTF-8"></script>
+    <script src="js/paging.js" type="application/javascript"></script>
+    <script type="text/javascript" th:inline="javascript">
+
+        $(function () {
+            //表头元素居中
+            $("th").css("text-align", "center");
+            var window_width = $(window).width();
+            var window_height = $(window).height();
+            $("#content_box").attr("width", window_width - 250 - 250);
+
+        })
+        /*提交查询*/
+        $("#selectProfess").click(function () {
+            $("#professform").attr("action", "selectProfess");
+            $("#professform").submit();
+        });
+        /*提交删除*/
+        $("#dropProfess").click(function () {
+            var chex = $("input[id^='box_']:checked");
+            if (chex.length == 0) {
+                alert("请选择你要删除的业务记录");
+            } else {
+                if (confirm("确定要删除该条业务记录吗？")) {
+                    $("#professform").attr("action", "deleteProfesss");
+                    $("#professform").submit();
+                }
+            }
+
+        });
+
+        /* 全选和反选*/
+        $("#checkAll").click(function () {
+
+            $("input[id^='box_']").prop("checked", this.checked);
+        });
+
+        //分页逻辑
+        var setTotalCount = [[${pageInfo.total}]];
+        var spageNum = [[${pageInfo.pages}]];
+        var initPageNos = [[${pageInfo.pageNum}]]
+        $('#box').paging({
+            initPageNo: initPageNos, // 初始页码
+            totalPages: spageNum, //总页数
+            totalCount: '合计 ' + setTotalCount + ' 条数据', // 条目总数
+            slideSpeed: 600, // 缓动速度。单位毫秒
+            jump: true, //是否支持跳转
+            callback: function (page) { // 回调函数
+                //给标志赋值
+                $("#pages").val(page);
+            }
+        })
+
+
+    </script>
+
+</body>
+</html>

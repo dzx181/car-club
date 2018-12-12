@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>docList</title>
+    <link href="css/bootstrap.css" type="text/css" rel="stylesheet"/>
+    <link href="css/main.css" type="text/css" rel="stylesheet"/>
+    <link href="css/paging.css" type="text/css" rel="stylesheet"/>
+    <style>
+
+
+    </style>
+</head>
+<body>
+<div style="border:#DDDDDD solid 1px;margin-top: 10px;padding: 10px;margin-left: 250px;height:700px;" id="content_box">
+    <span class="glyphicon glyphicon-circle-arrow-right"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;
+    当前位置：文件管理&nbsp;&gt;&nbsp;文件查询
+
+    <hr/>
+    <form action="" id="docform">
+
+        标题：<input name="title" id="name" style="height: 35px;" class="inputCss"
+                    th:value="${blurDoc}==null? '':${blurDoc.title}"/>&nbsp;&nbsp;
+       &nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="button" value="搜索" class="btn btn-success" id="selectDoc"/>&nbsp;
+        <input type="button" class="btn btn-danger" value="删除" id="dropDoc" th:if="${session.user.status==1}"/>
+
+        <br/><br/>
+        <table cellspacing="0" cellpadding="" class="table table-hover table-striped" style="text-align: center;"
+               id="doc_tab">
+            <tr id="tr_th">
+                <th><input type="checkbox" name="caption" value="0" id="checkAll"/></th>
+                <th>标题</th>
+                <th>文件名</th>
+                <th>评论</th>
+                <th>上传人</th>
+                <th>上传日期</th>
+                <th>操作</th>
+            </tr>
+            <tr th:each="doc:${docVOList}">
+                <td><input type="checkbox" name="caption"
+                           th:id="'box_'+${doc.id}" th:value="${doc.id}"/></td>
+                <td>[[${doc.title}]]</td>
+                <td>[[${doc.filename}]]</td>
+                <td>[[${doc.remark}]]</td>
+                <td>[[${doc.user.username}]]</td>
+                <td>
+                    <div th:text="${#dates.format(doc.createDate,'yyyy年MM月dd日')}"></div>
+                </td>
+                <td><a th:href="'/downloadFile?filename='+${doc.filename}+'&user.username='+${doc.user.username}"><span class="glyphicon glyphicon-save"></span></a></td>
+            </tr>
+        </table>
+    </form>
+    <!--分页元素-->
+    <div class="box" id="box"></div>
+    <!--添加表单提交标志-->
+    <form id="pageForm" style="display: none">
+        <input name="title" th:value="${blurDoc}==null? '':${blurDoc.title}"/>&nbsp;&nbsp;
+        <input type="text" id="pages" name="page"/>
+        <input type="button" id="btn" value="tijiao"/>
+        <!--传入分页的参数-->
+        <input type="text" id="actionName" value="selectDoc"/>
+    </form>
+
+    <script src="js/jquery-1.12.4.js" type="application/javascript" charset="UTF-8"></script>
+    <script src="js/bootstrap.js" type="application/javascript" charset="UTF-8"></script>
+    <script src="js/paging.js" type="application/javascript"></script>
+    <script type="text/javascript" th:inline="javascript">
+
+        $(function () {
+            //表头元素居中
+            $("th").css("text-align", "center");
+            var window_width = $(window).width();
+            var window_height = $(window).height();
+            $("#content_box").attr("width", window_width - 250 - 250);
+
+        })
+        /*提交查询*/
+        $("#selectDoc").click(function () {
+            $("#docform").attr("action", "selectDoc");
+            $("#docform").submit();
+        });
+        /*提交删除*/
+        $("#dropDoc").click(function () {
+            var chex = $("input[id^='box_']:checked");
+            if (chex.length == 0) {
+                alert("请选择你要删除的文件");
+            } else {
+                if (confirm("确定要删除该文件吗？")) {
+                    $("#docform").attr("action", "deleteDocs");
+                    $("#docform").submit();
+                }
+            }
+
+        });
+
+        /* 全选和反选*/
+        $("#checkAll").click(function () {
+
+            $("input[id^='box_']").prop("checked", this.checked);
+        });
+
+        //分页逻辑
+        var setTotalCount = [[${pageInfo.total}]];
+        var spageNum = [[${pageInfo.pages}]];
+        var initPageNos = [[${pageInfo.pageNum}]]
+        $('#box').paging({
+            initPageNo: initPageNos, // 初始页码
+            totalPages: spageNum, //总页数
+            totalCount: '合计 ' + setTotalCount + ' 条数据', // 条目总数
+            slideSpeed: 600, // 缓动速度。单位毫秒
+            jump: true, //是否支持跳转
+            callback: function (page) { // 回调函数
+                //给标志赋值
+                $("#pages").val(page);
+            }
+        })
+
+
+    </script>
+
+</body>
+</html>

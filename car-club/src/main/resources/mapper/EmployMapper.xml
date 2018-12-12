@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxq.dao.EmployDao">
+    <insert id="insertEmploy" parameterType="com.zxq.entity.Employ">
+        INSERT INTO car_employ(name, sex, telphone, birthday, entryDate,basicSalary,fullWork,status)
+        VALUES (#{name}, #{sex}, #{telphone}, #{birthday}, now(),#{basicSalary},#{fullWork},#{status});
+    </insert>
+    <delete id="deleteEmploy" parameterType="java.util.List">
+        DELETE FROM car_employ WHERE id IN
+        <foreach collection="list" separator="," close=")" open="(" item="id">
+            #{id}
+        </foreach>
+
+    </delete>
+    <update id="updateEmploy" parameterType="com.zxq.entity.Employ">
+        UPDATE car_employ
+        SET name = #{name},
+            sex  = #{sex},
+            telphone = #{telphone},
+            birthday       = #{birthday},
+            entryDate  = #{entryDate},
+            basicSalary = #{basicSalary},
+            fullWork       = #{fullWork},
+            status       = #{status}
+        WHERE id = #{id};
+    </update>
+    <select id="selectEmployByID" parameterType="java.lang.Integer" resultType="com.zxq.entity.Employ" >
+        SELECT
+            car_employ.id,
+            car_employ.`name`,
+            car_employ.sex,
+            car_employ.telphone,
+            car_employ.birthday,
+            car_employ.entryDate,
+            car_employ.basicSalary,
+            car_employ.fullWork,
+            car_employ.`status`
+        FROM
+            car_employ
+        WHERE id = #{id};
+    </select>
+    <select id="selectEmploy"
+            resultType="com.zxq.entity.Employ" >
+
+        SELECT
+        car_employ.id,
+        car_employ.`name`,
+        car_employ.sex,
+        car_employ.telphone,
+        car_employ.birthday,
+        car_employ.entryDate,
+        car_employ.basicSalary,
+        car_employ.fullWork,
+        car_employ.`status`
+        FROM
+        car_employ
+
+        <where>
+            <if test="name!=null and name!=''">
+                and name = #{name}
+            </if>
+            <if test="sex!=null and sex!=''">
+                and sex = #{sex}
+            </if>
+            <if test="telphone!=null and telphone!=''">
+                and telphone = #{telphone}
+            </if>
+            <if test="fullWork!=null and fullWork!=''">
+                and fullWork = #{fullWork}
+            </if>
+            <if test="status!=null and status!=''">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxq.dao.MemberDao">
+    <insert id="insertMember" parameterType="com.zxq.entity.Member">
+        INSERT INTO car_member(name, sex, telphone, birthday, weChatID,importanceGrade,pay,ifContinu)
+        VALUES (#{name}, #{sex}, #{telphone}, #{birthday},#{weChatID},#{importanceGrade},#{pay},#{ifContinu});
+    </insert>
+    <delete id="deleteMember" parameterType="java.util.List">
+        DELETE FROM car_member WHERE id IN
+        <foreach collection="list" separator="," close=")" open="(" item="id">
+            #{id}
+        </foreach>
+
+    </delete>
+    <update id="updateMember" parameterType="com.zxq.entity.Member">
+        UPDATE car_member
+        SET name = #{name},
+            sex  = #{sex},
+            telphone = #{telphone},
+            birthday       = #{birthday},
+            weChatID  = #{weChatID},
+            importanceGrade = #{importanceGrade},
+            pay       = #{pay},
+            ifContinu       = #{ifContinu}
+        WHERE id = #{id};
+    </update>
+    <select id="selectMember"
+            resultType="com.zxq.entity.Member" >
+
+        SELECT
+        car_member.id,
+        car_member.`name`,
+        car_member.sex,
+        car_member.telphone,
+        car_member.weChatID,
+        car_member.birthday,
+        car_member.importanceGrade,
+        car_member.pay,
+        car_member.ifContinu
+        FROM
+        car_member
+        <where>
+            <if test="name!=null and name!=''">
+                and name = #{name}
+            </if>
+            <if test="sex!=null and sex!=''">
+                and sex = #{sex}
+            </if>
+            <if test="telphone!=null and telphone!=''">
+                and telphone = #{telphone}
+            </if>
+            <if test="importanceGrade!=null and importanceGrade!=''">
+                and importanceGrade = #{importanceGrade}
+            </if>
+            <if test="ifContinu!=null and ifContinu!=''">
+                and ifContinu = #{ifContinu}
+            </if>
+        </where>
+    </select>
+    <!--查询全部的成员名和id-->
+    <select id="selectAllMember" resultType="com.zxq.entity.Member">
+        SELECT
+            car_member.id,
+            car_member.`name`
+        FROM
+            car_member
+    </select>
+    <!--根据id查找成员-->
+    <select id="selectMemberByID" parameterType="java.lang.Integer" resultType="com.zxq.entity.Member">
+        SELECT
+            car_member.id,
+            car_member.`name`,
+            car_member.sex,
+            car_member.telphone,
+            car_member.weChatID,
+            car_member.birthday,
+            car_member.importanceGrade,
+            car_member.pay,
+            car_member.ifContinu
+        FROM
+            car_member
+        WHERE id = #{id};
+    </select>
+</mapper>

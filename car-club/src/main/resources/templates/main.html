@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>汽车俱乐部</title>
+    <link href="css/bootstrap.css" type="text/css" rel="stylesheet"/>
+    <link rel="shortcut icon" href="img/logo（icon）.png"/>
+    <link href="css/main.css" type="text/css" charset="UTF-8" rel="stylesheet"/>
+</head>
+<body>
+
+<!--其他分辨率下的显示效果-->
+<iframe width="100%" height="120px" src="top" frameborder="no" scrolling="no" name="top" class="hidden-sm hidden-xs"
+        id="top"></iframe>
+
+<div class="main hidden-xs hidden-sm" style="width: 100%;">
+    <iframe width="250px" height="400px" src="left" frameborder="no" scrolling="no"
+            style="position: absolute;left: 0;top: 0px;" name="left" id="left">你的浏览器不支持iframe
+    </iframe>
+    <iframe src="right" frameborder="no" scrolling="no" marginheight="0" marginwidth="0" noresize="noresize"
+            name="right" id="right">你的浏览器不支持iframe
+    </iframe>
+</div>
+
+<!--超小屏幕分辨率下的显示效果-->
+<!--header-->
+
+<div style="background:#FF7F27;width:100%;height: 120px;" class="container hidden-lg hidden-md">
+    <div style="float: left;margin-top: 15px;">
+        <!--配置超小分辨率下的显示效果，出现该图片-->
+        <img src="img/logo2.png" class="img-responsive " style="margin-top: 15px;"/>
+    </div>
+
+    <!--配置超小分辨率下的显示效果，出现该按钮-->
+    <button class="btn btn-default btn-lg " data-toggle="collapse" data-target="#myCollapse"
+            style="position: absolute;right: 10px; top:40px">
+        <span class="glyphicon glyphicon-align-justify"></span>
+    </button>
+
+</div>
+
+<!--配置超小分辨率下的显示效果，点击该按钮出现折叠框-->
+<div class="collapse hidden-lg hidden-md" id="myCollapse"
+     style="background: #fff;width:100%;position: absolute; top:123px;z-index: 1001;">
+    <ul class="nav ">
+        <li><a href="index" style="color: #000000;"><span class="glyphicon glyphicon-home"
+                                                          style="color: #000000;"></span>&nbsp;网站首页</a></li>
+        <li><a href="consult" style="color: #000000;"><span class="glyphicon glyphicon-log-out"
+                                                            style="color: #000000;"></span>&nbsp;注销退出</a></li>
+        <li><a href="example" style="color: #000000;"><span class="glyphicon glyphicon-fire"
+                                                            style="color: #000000;"></span>&nbsp;关于我们</a></li>
+    </ul>
+</div>
+</body>
+<!--引入js文件-->
+<script src="js/jquery-1.12.4.js" type="application/javascript" charset="UTF-8"></script>
+<script src="js/bootstrap.js" type="application/javascript" charset="UTF-8"></script>
+<script type="application/javascript">
+
+    $(function () {
+        var window_width = $(window).width();
+        var window_height = $(window).height();
+        $("#right").attr("width", window_width - 20);
+        $("#right").attr("height", window_height);
+
+    });
+
+</script>
+</html>

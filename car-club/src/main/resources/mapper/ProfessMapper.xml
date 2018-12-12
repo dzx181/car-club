@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxq.dao.ProfessDao">
+    <insert id="insertProfess" parameterType="com.zxq.entity.Profess">
+        INSERT INTO car_profess(service_name, vehicle, member_id, insurance_type, create_date)
+        VALUES (#{serviceName}, #{vehicle}, #{memberId}, #{insuranceType}, now());
+    </insert>
+    <delete id="deleteProfess" parameterType="java.util.List">
+        DELETE FROM car_profess WHERE id IN
+        <foreach collection="list" separator="," close=")" open="(" item="id">
+            #{id}
+        </foreach>
+
+    </delete>
+    <update id="updateProfess" parameterType="com.zxq.entity.Profess">
+        UPDATE car_profess
+        SET service_name = #{serviceName},
+            vehicle     = #{vehicle},
+            member_id   = #{memberId},
+            insurance_type       = #{insuranceType}
+        WHERE id = #{id};
+    </update>
+    <select id="selectProfessByID" parameterType="java.lang.Integer" resultType="com.zxq.entity.vo.ProfessVO" resultMap="select_professMap">
+        SELECT
+            car_profess.id,
+            car_profess.service_name,
+            car_profess.vehicle,
+            car_profess.member_id,
+            car_profess.insurance_type,
+            car_profess.create_date
+        FROM
+            car_profess
+        WHERE id = #{id};
+    </select>
+    <select id="selectProfess"
+            resultType="com.zxq.entity.vo.ProfessVO" resultMap="select_professMap">
+
+        SELECT
+        car_profess.id,
+        car_profess.service_name,
+        car_profess.vehicle,
+        car_profess.member_id,
+        car_profess.insurance_type,
+        car_profess.create_date
+        FROM
+        car_profess
+
+        <where>
+            <if test="serviceName!=null and serviceName!=''">
+                and service_name = #{serviceName}
+            </if>
+            <if test="insuranceType!=null and insuranceType!=''">
+                and insurance_type = #{insuranceType}
+            </if>
+
+        </where>
+    </select>
+
+    <resultMap id="select_professMap" type="com.zxq.entity.vo.ProfessVO">
+        <id column="id" property="id"></id>
+        <result column="service_name" property="serviceName"></result>
+        <result column="vehicle" property="vehicle"></result>
+        <result column="insurance_type" property="insuranceType"></result>
+        <result column="create_date" property="createDate"></result>
+        <association property="member" column="member_id" select="com.zxq.dao.MemberDao.selectMemberByID"
+                     javaType="com.zxq.entity.Member"></association>
+    </resultMap>
+</mapper>

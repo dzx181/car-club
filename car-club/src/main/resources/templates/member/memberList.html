@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>memberList</title>
+    <link href="css/bootstrap.css" type="text/css" rel="stylesheet"/>
+    <link href="css/main.css" type="text/css" rel="stylesheet"/>
+    <link href="css/paging.css" type="text/css" rel="stylesheet"/>
+    <style>
+
+
+    </style>
+</head>
+<body>
+<div style="border:#DDDDDD solid 1px;margin-top: 10px;padding: 10px;margin-left: 250px;height:700px;" id="content_box">
+    <span class="glyphicon glyphicon-circle-arrow-right"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;
+    当前位置：会员管理&nbsp;&gt;&nbsp;会员查询
+
+    <hr/>
+    <form action="" id="memberform">
+
+        会员姓名：<input name="name" id="name" style="height: 35px;" class="inputCss"
+                    th:value="${blurMember}==null? '':${blurMember.name}"/>&nbsp;&nbsp;
+        手机号码：<input name="telphone" id="telphone" style="height: 35px;" class="inputCss"
+                    th:value="${blurMember}==null? '':${blurMember.telphone}"/>&nbsp;&nbsp;
+        性别：<select name="sex" id="sex" style="height: 35px;" class="inputCss"
+                   th:value="${blurMember}==null? '':${blurMember.sex} ">
+        <option value="" th:selected="${blurMember}==null? true:false">----全部----</option>
+        <option value="男" th:selected="${blurMember}==null? false:(${blurMember.sex}=='男'?true:false)">男</option>
+        <option value="女" th:selected="${blurMember}==null? false:(${blurMember.sex}=='女'?true:false)">女</option>
+    </select>&nbsp;&nbsp;&nbsp;&nbsp;
+        会员是否续费：<select name="ifContinu" id="ifContinu" style="height: 35px;" class="inputCss">
+        <option value="" th:selected="${blurMember}==null? true:false">----全部----</option>
+        <option value="是" th:selected="${blurMember}==null? false:(${blurMember.ifContinu}=='是'?true:false)">是</option>
+        <option value="否" th:selected="${blurMember}==null? false:(${blurMember.ifContinu}=='否'?true:false)">否</option>
+        </option>
+    </select>&nbsp;&nbsp;&nbsp;&nbsp;
+
+        重要程度：<select name="importanceGrade" id="importanceGrade" style="height: 35px;" class="inputCss"
+                     th:value="${blurMember}==null? '':${blurMember.importanceGrade} ">
+        <option value="" th:selected="${blurMember}==null? true:false">----全部----</option>
+        <option value="1" th:selected="${blurMember}==null? false:(${blurMember.importanceGrade}==1?true:false)">重点
+        </option>
+        <option value="2" th:selected="${blurMember}==null? false:(${blurMember.importanceGrade}==2?true:false)">优质
+        </option>
+        <option value="3" th:selected="${blurMember}==null? false:(${blurMember.importanceGrade}==3?true:false)">会员
+        </option>
+        <option value="4" th:selected="${blurMember}==null? false:(${blurMember.importanceGrade}==4?true:false)">一般
+        </option>
+        <option value="5" th:selected="${blurMember}==null? false:(${blurMember.importanceGrade}==5?true:false)">放弃
+        </option>
+        <option value="6" th:selected="${blurMember}==null? false:(${blurMember.importanceGrade}==6?true:false)">未知
+        </option>
+    </select>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="button" value="搜索" class="btn btn-success" id="selectMember"/>&nbsp;
+        <input type="button" class="btn btn-danger" value="删除" id="dropMember" th:if="${session.user.status==1}"/>
+
+        <br/><br/>
+        <table cellspacing="0" cellpadding="" class="table table-hover table-striped" style="text-align: center;"
+               id="member_tab">
+            <tr id="tr_th">
+                <th><input type="checkbox" name="caption" value="0" id="checkAll"/></th>
+                <th>会员姓名</th>
+                <th>性别</th>
+                <th>手机号码</th>
+                <th>微信</th>
+                <th>是否续费</th>
+                <th>重要程度</th>
+                <th>会费</th>
+                <th>生日</th>
+                <th>操作</th>
+            </tr>
+            <tr th:each="member:${memberVOList}">
+                <td><input type="checkbox" name="caption"
+                           th:id="'box_'+${member.id}" th:value="${member.id}"/></td>
+                <td>[[${member.name}]]</td>
+                <td>[[${member.sex}]]</td>
+                <td>[[${member.telphone}]]</td>
+                <td>[[${member.weChatID}]]</td>
+                <td>[[${member.ifContinu}]]</td>
+                <td th:if="${member.importanceGrade}!=null">
+                    <span th:if="${member.importanceGrade}==1">重点</span>
+                    <span th:if="${member.importanceGrade}==2">优质</span>
+                    <span th:if="${member.importanceGrade}==3">会员</span>
+                    <span th:if="${member.importanceGrade}==4">一般</span>
+                    <span th:if="${member.importanceGrade}==5">放弃</span>
+                    <span th:if="${member.importanceGrade}==6">未知</span>
+                </td>
+                <td>[[${member.pay}]]</td>
+                <td>
+                    <div th:text="${#dates.format(member.birthday,'yyyy年MM月dd日')}"></div>
+                </td>
+
+                <td><a th:href="'editMember?memberId='+${member.id}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+            </tr>
+        </table>
+    </form>
+    <!--分页元素-->
+    <div class="box" id="box"></div>
+    <!--添加表单提交标志-->
+    <form id="pageForm" style="display: none">
+        <input name="name" th:value="${blurMember}==null? '':${blurMember.name}"/>&nbsp;&nbsp;
+        <input name="telphone" th:value="${blurMember}==null? '':${blurMember.telphone}"/>&nbsp;&nbsp;
+        <input name="sex" th:value="${blurMember}==null? '':${blurMember.sex} "/>
+        <input name="ifContinu" th:value="${blurMember}==null? '':${blurMember.ifContinu} "/>p;&nbsp;
+        <input name="importanceGrade" th:value="${blurMember}==null? '':${blurMember.importanceGrade} "/>p;&nbsp;
+        <input type="text" id="pages" name="page"/>
+        <input type="button" id="btn" value="tijiao"/>
+        <!--传入分页的参数-->
+        <input type="text" id="actionName" value="selectMember"/>
+    </form>
+
+    <script src="js/jquery-1.12.4.js" type="application/javascript" charset="UTF-8"></script>
+    <script src="js/bootstrap.js" type="application/javascript" charset="UTF-8"></script>
+    <script src="js/paging.js" type="application/javascript"></script>
+    <script type="text/javascript" th:inline="javascript">
+
+        $(function () {
+            //表头元素居中
+            $("th").css("text-align", "center");
+            var window_width = $(window).width();
+            var window_height = $(window).height();
+            $("#content_box").attr("width", window_width - 250 - 250);
+
+        })
+        /*提交查询*/
+        $("#selectMember").click(function () {
+            $("#memberform").attr("action", "selectMember");
+            $("#memberform").submit();
+        });
+        /*提交删除*/
+        $("#dropMember").click(function () {
+            var chex = $("input[id^='box_']:checked");
+            if (chex.length == 0) {
+                alert("请选择你要删除的会员");
+            } else {
+                if (confirm("确定要删除该会员吗？")) {
+                    $("#memberform").attr("action", "deleteMembers");
+                    $("#memberform").submit();
+                }
+            }
+
+        });
+
+        /* 全选和反选*/
+        $("#checkAll").click(function () {
+
+            $("input[id^='box_']").prop("checked", this.checked);
+        });
+
+        //分页逻辑
+        var setTotalCount = [[${pageInfo.total}]];
+        var spageNum = [[${pageInfo.pages}]];
+        var initPageNos = [[${pageInfo.pageNum}]]
+        $('#box').paging({
+            initPageNo: initPageNos, // 初始页码
+            totalPages: spageNum, //总页数
+            totalCount: '合计 ' + setTotalCount + ' 条数据', // 条目总数
+            slideSpeed: 600, // 缓动速度。单位毫秒
+            jump: true, //是否支持跳转
+            callback: function (page) { // 回调函数
+                //给标志赋值
+                $("#pages").val(page);
+            }
+        })
+
+
+    </script>
+
+</body>
+</html>

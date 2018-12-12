@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>consumeList</title>
+    <link href="css/bootstrap.css" type="text/css" rel="stylesheet"/>
+    <link href="css/main.css" type="text/css" rel="stylesheet"/>
+    <link href="css/paging.css" type="text/css" rel="stylesheet"/>
+    <style>
+
+
+    </style>
+</head>
+<body>
+<div style="border:#DDDDDD solid 1px;margin-top: 10px;padding: 10px;margin-left: 250px;height:700px;" id="content_box">
+    <span class="glyphicon glyphicon-circle-arrow-right"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;
+    当前位置：消费管理&nbsp;&gt;&nbsp;消费查询
+
+    <hr/>
+    <form action="" id="consumeform">
+
+        消费人：
+        <select name="memberId" id="memberId" style="height: 35px;" class="inputCss"
+                th:value="${blurConsume}==null? '':${blurConsume.memberId} ">
+            <option value="" th:selected="${blurConsume}==null? true:false">----全部----</option>
+            <option th:value="${member.id}"
+                    th:selected="${blurConsume}==null? false:(${blurConsume.memberId}==${member.id}?true:false)"
+                    th:each="member:${application.allMemberName}">[[${member.name}]]
+            </option>
+        </select>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="button" value="搜索" class="btn btn-success" id="selectConsume"/>&nbsp;
+        <input type="button" class="btn btn-danger" value="删除" id="dropConsume" th:if="${session.user.status==1}"/>
+
+        <br/><br/>
+        <table cellspacing="0" cellpadding="" class="table table-hover table-striped" style="text-align: center;"
+               id="consume_tab">
+            <tr id="tr_th">
+                <th><input type="checkbox" name="caption" value="0" id="checkAll"/></th>
+                <th>消费分析</th>
+                <th>日消费汇总</th>
+                <th>月消费汇总</th>
+                <th>消费人</th>
+                <th>消费时间</th>
+                <th>操作</th>
+            </tr>
+            <tr th:each="consume:${consumeVOList}">
+                <td><input type="checkbox" name="caption"
+                           th:id="'box_'+${consume.id}" th:value="${consume.id}"/></td>
+                <td>[[${consume.consumeAnalyes}]]</td>
+                <td>[[${consume.consumeDay}]]</td>
+                <td>[[${consume.consumeMonth}]]</td>
+                <td>[[${consume.member.name}]]</td>
+                <td>
+                    <div th:text="${#dates.format(consume.createDate,'yyyy年MM月dd日 HH时mm分ss秒')}"></div>
+                </td>
+                <td><a th:href="'editConsume?consumeId='+${consume.id}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+            </tr>
+        </table>
+    </form>
+    <!--分页元素-->
+    <div class="box" id="box"></div>
+    <!--添加表单提交标志-->
+    <form id="pageForm" style="display: none">
+        <input name="memberId" th:value="${blurConsume}==null? '':${blurConsume.memberId} "/>
+        <input type="text" id="pages" name="page"/>
+
+        <input type="button" id="btn" value="tijiao"/>
+        <!--传入分页的参数-->
+        <input type="text" id="actionName" value="selectConsume"/>
+    </form>
+
+    <script src="js/jquery-1.12.4.js" type="application/javascript" charset="UTF-8"></script>
+    <script src="js/bootstrap.js" type="application/javascript" charset="UTF-8"></script>
+    <script src="js/paging.js" type="application/javascript"></script>
+    <script type="text/javascript" th:inline="javascript">
+
+        $(function () {
+            //表头元素居中
+            $("th").css("text-align", "center");
+            var window_width = $(window).width();
+            var window_height = $(window).height();
+            $("#content_box").attr("width", window_width - 250 - 250);
+
+        })
+        /*提交查询*/
+        $("#selectConsume").click(function () {
+            $("#consumeform").attr("action", "selectConsume");
+            $("#consumeform").submit();
+        });
+        /*提交删除*/
+        $("#dropConsume").click(function () {
+            var chex = $("input[id^='box_']:checked");
+            if (chex.length == 0) {
+                alert("请选择你要删除的消费记录");
+            } else {
+                if (confirm("确定要删除该条消费记录吗？")) {
+                    $("#consumeform").attr("action", "deleteConsumes");
+                    $("#consumeform").submit();
+                }
+            }
+
+        });
+
+        /* 全选和反选*/
+        $("#checkAll").click(function () {
+
+            $("input[id^='box_']").prop("checked", this.checked);
+        });
+
+        //分页逻辑
+        var setTotalCount = [[${pageInfo.total}]];
+        var spageNum = [[${pageInfo.pages}]];
+        var initPageNos = [[${pageInfo.pageNum}]]
+        $('#box').paging({
+            initPageNo: initPageNos, // 初始页码
+            totalPages: spageNum, //总页数
+            totalCount: '合计 ' + setTotalCount + ' 条数据', // 条目总数
+            slideSpeed: 600, // 缓动速度。单位毫秒
+            jump: true, //是否支持跳转
+            callback: function (page) { // 回调函数
+                //给标志赋值
+                $("#pages").val(page);
+            }
+        })
+
+
+    </script>
+
+</body>
+</html>

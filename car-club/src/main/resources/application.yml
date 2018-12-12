@@ -1,0 +1,19 @@
+#配置端口号
+server:
+  port: 8081
+spring:
+  application:
+    name: car-club
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_car?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: root
+  thymeleaf:
+    cache: false
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+
+logging:
+  level:
+    com.zxq.dao: debug

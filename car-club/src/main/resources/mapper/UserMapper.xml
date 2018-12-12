@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxq.dao.UserDao">
+    <insert id="insertUser" parameterType="com.zxq.entity.User">
+        INSERT INTO car_user(username,password,status,createDate) VALUES(#{username},#{password},#{status},now());
+    </insert>
+    <delete id="deleteUser" parameterType="java.util.List">
+        DELETE FROM car_user WHERE id IN
+        <foreach collection="list" separator="," close=")" open="(" item="id">
+            #{id}
+        </foreach>
+
+    </delete>
+    <update id="updateUser" parameterType="com.zxq.entity.User">
+        UPDATE car_user SET username = #{username},password = #{password},status = #{status} WHERE id = #{id};
+    </update>
+    <select id="selectUser" parameterType="com.zxq.entity.User" resultType="com.zxq.entity.User">
+        SELECT id,username,password,status,createDate FROM car_user
+
+        <where>
+            <if test="username!=null and username!=''">
+                and username like '%${username}%'
+            </if>
+            <if test="status!=null and status!=''">
+                and status=#{status}
+            </if>
+
+        </where>
+
+    </select>
+    <select id="selectUserByID" parameterType="java.lang.Integer" resultType="com.zxq.entity.User">
+        SELECT id,username,password,status,createDate FROM car_user WHERE id = #{id};
+    </select>
+    <!-- 判断登录名是否重复 -->
+    <select id="findUsername" parameterType="com.zxq.entity.User"
+            resultType="com.zxq.entity.User">
+        select id,username,password,status,createDate FROM car_user where username=#{username};
+    </select>
+    <!--查询登录名与密码-->
+    <select id="selectUserByNameAndPass" parameterType="com.zxq.entity.User"
+            resultType="com.zxq.entity.User">
+        SELECT id,username,password,status,createDate FROM car_user WHERE username = #{username} AND password =
+                                                                                                       #{password}
+    </select>
+</mapper>

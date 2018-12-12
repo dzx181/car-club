@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>left</title>
+    <link href="css/bootstrap.css" type="text/css" rel="stylesheet"/>
+</head>
+<body style="padding-left: 10px; padding-top: 10px; padding-right: 10px">
+<div class="panel-group " id="accordion" role="tablist" aria-multiselectable="true">
+
+    <div class="panel panel-default" th:if="${session.user.status==1}">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                   aria-expanded="true" aria-controls="collapseOne" style="text-decoration: none;">
+          <span class="glyphicon glyphicon-user">
+         	
+         </span>&nbsp;&nbsp;<span>用户管理 </span>
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <ul>
+                    <li id="user_Select" style="list-style: none; cursor: pointer;"><span
+                            class="glyphicon glyphicon-search"></span>&nbsp;<a href="selectUser" target="right"
+                                                                               style="text-decoration: none;cursor: pointer;">用户查询</a>
+                    </li>
+
+                    <li id="user_Add" style="list-style: none;cursor: pointer;"><span
+                            class="glyphicon glyphicon-send"></span>&nbsp;<a href="userAdd" target="right"
+                                                                             style="text-decoration: none;cursor: pointer;">添加用户</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingThree">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree"
+                   aria-expanded="false" aria-controls="collapseThree" style="text-decoration: none;">
+		<span class="glyphicon glyphicon-bookmark">
+         	
+         </span>&nbsp;&nbsp;会员管理
+                </a>
+            </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="panel-body">
+                <ul style="list-style: none;cursor: pointer;">
+                    <li id="jop_Select"><span class="glyphicon glyphicon-search"></span>&nbsp;<a href="selectMember"
+                                                                                                 target="right"
+                                                                                                 style="text-decoration: none;cursor: pointer;">会员查询</a>
+                    </li>
+
+                    <li id="jop_Add" th:if="${session.user.status==1}"><span class="glyphicon glyphicon-send"></span>&nbsp;<a href="memberAdd" target="right"
+                                                                                            style="text-decoration: none;cursor: pointer;">添加会员</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default" th:if="${session.user.status==1}">
+        <div class="panel-heading" role="tab" id="headingFour">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour"
+                   aria-expanded="false" aria-controls="collapseFour" style="text-decoration: none;">
+		<span class="glyphicon glyphicon-wrench">
+         	
+         </span>&nbsp;&nbsp;员工管理
+                </a>
+            </h4>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+            <div class="panel-body">
+                <ul style="list-style: none;cursor: pointer;">
+                    <li id="employ_Select"><span class="glyphicon glyphicon-search"></span>&nbsp;<a href="selectEmploy"
+                                                                                                    target="right"
+                                                                                                    style="text-decoration: none;cursor: pointer;">员工查询</a>
+                    </li>
+
+                    <li id="employ_Add"><span class="glyphicon glyphicon-send"></span>&nbsp;<a href="employAdd"
+                                                                                               target="right"
+                                                                                               style="text-decoration: none;cursor: pointer;">添加员工</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"
+                   aria-expanded="false" aria-controls="collapseTwo" style="text-decoration: none;">
+		 <span class="glyphicon glyphicon-tags">
+
+    </span>&nbsp;&nbsp;消费管理
+                </a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body">
+                <ul style="list-style: none;cursor: pointer;">
+                    <li id="depart_Select"><span class="glyphicon glyphicon-search"></span>&nbsp;<a href="selectConsume"
+                                                                                                    target="right"
+                                                                                                    style="text-decoration: none;cursor: pointer;">消费查询</a>
+                    </li>
+
+                    <li id="depart_Add" th:if="${session.user.status==1}"><span class="glyphicon glyphicon-send"></span>&nbsp;<a href="consumeAdd"
+                                                                                               target="right"
+                                                                                               style="text-decoration: none;cursor: pointer;">添加消费</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingSeven">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven"
+                   aria-expanded="false" aria-controls="collapseSeven" style="text-decoration: none;">
+		 <span class="glyphicon glyphicon-education">
+
+    </span>&nbsp;&nbsp;业务管理
+                </a>
+            </h4>
+        </div>
+        <div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+            <div class="panel-body">
+                <ul style="list-style: none;cursor: pointer;">
+                    <li id="student_Select"><span class="glyphicon glyphicon-search"></span>&nbsp;<a
+                            href="selectProfess" target="right" style="text-decoration: none;cursor: pointer;">业务查询</a>
+                    </li>
+
+                    <li id="student_Add" th:if="${session.user.status==1}"><span class="glyphicon glyphicon-send"></span>&nbsp;<a href="professAdd"
+                                                                                                target="right"
+                                                                                                style="text-decoration: none;cursor: pointer;">添加业务</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingEight">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEight"
+                   aria-expanded="false" aria-controls="collapseEight" style="text-decoration: none;">
+		 <span class="glyphicon glyphicon-education">
+
+    </span>&nbsp;&nbsp;文件管理
+                </a>
+            </h4>
+        </div>
+        <div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+            <div class="panel-body">
+                <ul style="list-style: none;cursor: pointer;">
+                    <li id="student_Select"><span class="glyphicon glyphicon-search"></span>&nbsp;<a
+                            href="selectDoc" target="right" style="text-decoration: none;cursor: pointer;">文件查询</a>
+                    </li>
+
+                    <li id="student_Add"><span class="glyphicon glyphicon-send"></span>&nbsp;<a href="toUploadFile"
+                                                                                                target="right"
+                                                                                                style="text-decoration: none;cursor: pointer;">上传文件</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="application/javascript" charset="UTF-8" src="js/jquery-1.12.4.js"></script>
+<script type="application/javascript" charset="UTF-8" src="js/bootstrap.js"></script>
+</html>
